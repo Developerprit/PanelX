@@ -1,0 +1,15 @@
+# runtime state (generated on first run, contains hashed credentials)
+users.json
+users.json.tmp
+
+# python
+__pycache__/
+*.pyc
+*.tmp
+
+# os / editor
+.DS_Store
+Thumbs.db
+
+# project memory / local tooling (do not publish)
+.workbuddy/

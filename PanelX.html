@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PanelX — 单文件服务器运维面板</title>
+<meta name="description" content="PanelX：一个 Python 文件搞定服务器监控。实时 CPU/内存/磁盘/网络、进程管理、系统信息，零第三方依赖。">
+<script>
+(function(){try{var t=localStorage.getItem('panelx_site_theme');if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();
+</script>
+<style>
+:root{
+  --paper:#f5f4f1; --ink:#16191f; --muted:#6c7079; --surface:#ffffff; --line:#e4e2dc;
+  --accent:#1f9d6b; --accent-2:#0e7a52; --amber:#b9791a; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+}
+[data-theme="dark"]{
+  --paper:#0f1115; --ink:#eef1f5; --muted:#8b95a5; --surface:#171b21; --line:#262c35;
+  --accent:#34e3a0; --accent-2:#1f9d6b; --amber:#e0a13a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+a{color:var(--accent-2);text-decoration:none}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+/* nav */
+nav{display:flex;align-items:center;gap:14px;padding:20px 0;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.02em}
+.brand img{height:30px;width:30px;object-fit:contain;border-radius:7px;background:var(--surface);border:1px solid var(--line)}
+.brand small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--muted);font-weight:600}
+.navspacer{flex:1}
+.navlinks{display:flex;gap:22px;font-size:14px}
+.navlinks a{color:var(--ink);opacity:.8}
+.navlinks a:hover{opacity:1;color:var(--accent-2)}
+.tg{font-family:var(--mono);font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 12px;border-radius:9px;cursor:pointer}
+.tg:hover{border-color:var(--accent)}
+/* hero */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;padding:64px 0 48px}
+.hero h1{font-size:clamp(30px,5vw,52px);line-height:1.08;letter-spacing:-.02em;margin:14px 0 16px;font-weight:800}
+.hero h1 .em{color:var(--accent)}
+.hero p.lead{font-size:17px;color:var(--muted);max-width:46ch}
+.hero .en{font-size:13px;color:var(--muted);margin-top:10px;font-family:var(--mono)}
+.term{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 18px 50px rgba(16,24,40,.08)}
+[data-theme="dark"] .term{box-shadow:0 18px 50px rgba(0,0,0,.4)}
+.term .bar{display:flex;gap:7px;padding:11px 14px;border-bottom:1px solid var(--line);background:var(--paper)}
+.term .bar i{width:11px;height:11px;border-radius:50%;background:var(--line);display:block}
+.term pre{padding:18px 18px;font-family:var(--mono);font-size:13px;line-height:1.7;overflow-x:auto;color:var(--ink)}
+.term pre .c{color:var(--muted)}
+.term pre .p{color:var(--accent)}
+.cta{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+.btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:11px 20px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:.18s}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(1.05);color:#fff}
+/* spec strip */
+.strip{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:8px 0 56px;background:var(--surface)}
+.strip div{flex:1;min-width:140px;padding:16px 20px;border-right:1px solid var(--line)}
+.strip div:last-child{border-right:none}
+.strip b{display:block;font-family:var(--mono);font-size:20px}
+.strip span{font-size:12px;color:var(--muted);letter-spacing:.04em}
+/* section */
+section{padding:40px 0;border-top:1px solid var(--line)}
+section h2{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-family:var(--mono);margin-bottom:24px}
+.feat{display:grid;grid-template-columns:repeat(2,1fr);gap:0}
+.feat .item{padding:22px 26px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.feat .item:nth-child(2n){border-right:none}
+.feat .item .no{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:.1em}
+.feat .item h3{font-size:18px;margin:6px 0 6px}
+.feat .item p{color:var(--muted);font-size:14px}
+.feat .item .en{font-size:12px;color:var(--muted);opacity:.75;font-family:var(--mono);margin-top:4px}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line)}
+th{background:var(--surface);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td.mono{font-family:var(--mono)}
+tr:last-child td{border-bottom:none}
+/* security callout */
+.sec{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;padding:18px 22px;font-size:14px;color:var(--muted)}
+.sec b{color:var(--ink)}
+footer{padding:40px 0 60px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+@media(max-width:760px){
+  .hero{grid-template-columns:1fr;gap:28px;padding:40px 0 30px}
+  .feat{grid-template-columns:1fr}
+  .feat .item{border-right:none}
+  .navlinks{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav>
+    <div class="brand"><img src="PanelX_logo.png" alt="PanelX"><div>PanelX<small>SERVER OPS</small></div></div>
+    <div class="navspacer"></div>
+    <div class="navlinks">
+      <a href="#features">功能 / Features</a>
+      <a href="#tech">实现 / How</a>
+      <a href="https://github.com/Developerprit/PanelX" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <button class="tg" id="tg">◐ 主题</button>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <span class="eyebrow">服务器运维控制台 · Server Ops Console</span>
+      <h1>把一台服务器的<span class="em">心跳</span>，<br>装进一个浏览器标签页。</h1>
+      <p class="lead">PanelX 是一个 Python 文件：启动即服务，浏览器登录即得实时资源监控、进程管理与系统信息。没有框架，没有依赖，只有标准库。</p>
+      <p class="en">One Python file. Boot it, open a tab, watch your server breathe — CPU, memory, disk, network, processes, all live.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/Developerprit/PanelX" target="_blank" rel="noopener">获取源码 / Get source</a>
+        <a class="btn" href="#features">查看功能 / Features</a>
+      </div>
+    </div>
+    <div class="term">
+      <div class="bar"><i></i><i></i><i></i></div>
+<pre><span class="c"># 启动面板（默认端口 5221）</span>
+<span class="p">$</span> python3 panelx.py
+
+<span class="c"># 浏览器访问</span>
+  http://localhost:5221/
+
+<span class="c"># 默认账号（首次登录后请修改）</span>
+  admin / admin123456</pre>
+    </div>
+  </div>
+
+  <!-- SPEC STRIP -->
+  <div class="strip">
+    <div><b>1 文件</b><span>Single file · 单文件交付</span></div>
+    <div><b>0 依赖</b><span>Zero 3rd-party deps</span></div>
+    <div><b>5221</b><span>Default port</span></div>
+    <div><b>Py 3.8+</b><span>Standard library only</span></div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <h2>功能 / What it does</h2>
+    <div class="feat">
+      <div class="item"><div class="no">01</div><h3>实时资源监控</h3><p>CPU、内存、磁盘与网络使用率，前端每 2 秒自动刷新。</p><div class="en">Live CPU / memory / disk / network, polled every 2s.</div></div>
+      <div class="item"><div class="no">02</div><h3>进程管理</h3><p>列出运行中的进程，支持按 PID 一键终止。</p><div class="en">List processes; kill by PID from the UI.</div></div>
+      <div class="item"><div class="no">03</div><h3>系统信息概览</h3><p>操作系统、主机名、运行时长、Python 与架构一目了然。</p><div class="en">OS, hostname, uptime, Python & arch at a glance.</div></div>
+      <div class="item"><div class="no">04</div><h3>登录认证</h3><p>会话令牌 + 密码加盐哈希，未登录接口一律拦截。</p><div class="en">Session token + salted hash; APIs gated.</div></div>
+    </div>
+  </section>
+
+  <!-- TECH -->
+  <section id="tech">
+    <h2>实现 / Under the hood</h2>
+    <table>
+      <thead><tr><th>指标 Metric</th><th>Linux 数据来源</th><th>Windows 回退</th></tr></thead>
+      <tbody>
+        <tr><td>CPU</td><td class="mono">/proc/stat 采样差值</td><td class="mono">GetSystemTimes (ctypes)</td></tr>
+        <tr><td>内存</td><td class="mono">/proc/meminfo</td><td class="mono">GlobalMemoryStatusEx</td></tr>
+        <tr><td>磁盘</td><td class="mono">/proc/mounts + statvfs</td><td class="mono">GetLogicalDriveStrings</td></tr>
+        <tr><td>网络</td><td class="mono">/proc/net/dev 速率</td><td class="mono">GetIfTable (iphlpapi)</td></tr>
+        <tr><td>进程</td><td class="mono">/proc/&lt;pid&gt;/*</td><td class="mono">CreateToolhelp32Snapshot</td></tr>
+      </tbody>
+    </table>
+    <div class="sec" style="margin-top:22px">
+      <b>为什么零依赖？</b> 运维场景往往不允许随意装包。PanelX 只用 Python 标准库 + 系统调用，
+      拷贝这一个文件就能在任何装了 Python 3 的服务器上跑起来。
+      <span class="en">Why zero-dep? Ops boxes often forbid arbitrary installs — one file, any Python 3, done.</span>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 kscm · Licensed under <a href="https://license.kscm.top/available.md" target="_blank" rel="noopener">Available License</a></span>
+    <span class="mono">PanelX · python3 panelx.py --port 5221</span>
+  </footer>
+
+</div>
+<script>
+document.getElementById('tg').onclick=function(){
+  var cur=document.documentElement.getAttribute('data-theme');
+  var next=cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',next);
+  try{localStorage.setItem('panelx_site_theme',next);}catch(e){}
+};
+</script>
+</body>
+</html>
