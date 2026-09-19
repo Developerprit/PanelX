@@ -35,6 +35,11 @@ a process table you can kill from, and system info — all over a clean, respons
 # 1. run it (default port 5221)
 python3 panelx.py                 # or: python3 panelx.py --host 0.0.0.0 --port 5221
 
+# Convenience launchers (equivalent to the command above):
+python3 run.py                   # cross-platform Python launcher
+./run.sh                         # Linux / macOS  (chmod +x run.sh)
+run.bat                          # Windows  (uses py -3, avoids the python alias stub)
+
 # 2. open in browser
 #    http://<server-ip>:5221/
 

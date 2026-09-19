@@ -29,6 +29,11 @@
 # 1. 启动（默认端口 5221）
 python3 panelx.py                 # 或：python3 panelx.py --host 0.0.0.0 --port 5221
 
+# 便捷启动脚本（效果同上）：
+python3 run.py                   # 跨平台 Python 启动器
+./run.sh                         # Linux / macOS（需 chmod +x run.sh）
+run.bat                          # Windows（使用 py -3，规避 python 别名桩）
+
 # 2. 浏览器打开
 #    http://<服务器IP>:5221/
 
