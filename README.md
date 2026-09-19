@@ -40,6 +40,10 @@ python3 run.py                   # cross-platform Python launcher
 ./run.sh                         # Linux / macOS  (chmod +x run.sh)
 run.bat                          # Windows  (uses py -3, avoids the python alias stub)
 
+# One-shot fetch + run (auto git clone if panelx.py is missing):
+Download.sh                     # Linux / macOS  (clone repo, then run)
+Download.bat                    # Windows  (clone repo, then run)
+
 # 2. open in browser
 #    http://<server-ip>:5221/
 

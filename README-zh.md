@@ -34,6 +34,10 @@ python3 run.py                   # 跨平台 Python 启动器
 ./run.sh                         # Linux / macOS（需 chmod +x run.sh）
 run.bat                          # Windows（使用 py -3，规避 python 别名桩）
 
+# 一键获取并运行（本地缺失时自动 git clone）：
+Download.sh                     # Linux / macOS（克隆仓库后运行）
+Download.bat                    # Windows（克隆仓库后运行）
+
 # 2. 浏览器打开
 #    http://<服务器IP>:5221/
 
